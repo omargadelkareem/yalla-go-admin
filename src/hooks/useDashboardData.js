@@ -9,18 +9,40 @@ export function useDashboardData() {
   const [captains, setCaptains] = useState([])
   const [rides, setRides] = useState([])
   const [loaded, setLoaded] = useState({ captains: false, rides: false })
+  const [error, setError] = useState(null)
 
   useEffect(() => {
-    const stopCaptains = onValue(ref(db, 'captains'), (snapshot) => {
-      setCaptains(mapSnapshot(snapshot))
-      setLoaded((current) => ({ ...current, captains: true }))
-    })
-    const stopRides = onValue(ref(db, 'rideRequests'), (snapshot) => {
-      setRides(mapSnapshot(snapshot))
-      setLoaded((current) => ({ ...current, rides: true }))
-    })
+    const fail = (source) => (firebaseError) => {
+      console.error('Yalla Go RTDB read failed:', source, firebaseError)
+      setError(firebaseError)
+      setLoaded((current) => ({ ...current, [source]: true }))
+    }
+
+    const stopCaptains = onValue(
+      ref(db, 'captains'),
+      (snapshot) => {
+        setCaptains(mapSnapshot(snapshot))
+        setLoaded((current) => ({ ...current, captains: true }))
+      },
+      fail('captains'),
+    )
+
+    const stopRides = onValue(
+      ref(db, 'rideRequests'),
+      (snapshot) => {
+        setRides(mapSnapshot(snapshot))
+        setLoaded((current) => ({ ...current, rides: true }))
+      },
+      fail('rides'),
+    )
+
     return () => { stopCaptains(); stopRides() }
   }, [])
 
-  return { captains, rides, loading: !loaded.captains || !loaded.rides }
+  return {
+    captains,
+    rides,
+    error,
+    loading: !loaded.captains || !loaded.rides,
+  }
 }
