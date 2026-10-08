@@ -1,0 +1,8 @@
+import { useState } from 'react'
+import { Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react'
+
+export default function LoginPage({ login, error }) {
+  const [email,setEmail]=useState(''), [password,setPassword]=useState(''), [show,setShow]=useState(false), [busy,setBusy]=useState(false)
+  const submit=async(e)=>{e.preventDefault();setBusy(true);try{await login(email,password)}catch{}finally{setBusy(false)}}
+  return <main className="login-page" dir="rtl"><section className="login-brand"><div className="login-logo">Y</div><span>YALLA GO</span><h1>مركز التحكم<br/>في عملياتك.</h1><p>إدارة الكباتن، الرحلات والمحافظ من لوحة واحدة آمنة.</p><div className="login-grid"><i/><i/><i/><i/><i/><i/></div></section><section className="login-side"><form className="login-card" onSubmit={submit}><div className="mobile-logo">Y</div><span className="login-kicker">ADMIN PORTAL</span><h2>تسجيل الدخول</h2><p>أدخل بيانات حساب الإدارة للمتابعة.</p><label>البريد الإلكتروني<div className="field"><Mail/><input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="admin@yallago.com" required/></div></label><label>كلمة المرور<div className="field"><LockKeyhole/><input type={show?'text':'password'} value={password} onChange={e=>setPassword(e.target.value)} placeholder="••••••••" required/><button type="button" onClick={()=>setShow(!show)}>{show?<EyeOff/>:<Eye/>}</button></div></label>{error&&<div className="login-error">{error}</div>}<button className="login-submit" disabled={busy}>{busy?'جاري التحقق...':'دخول لوحة التحكم'}</button><small>Yalla Go • Sohag Operations</small></form></section></main>
+}
