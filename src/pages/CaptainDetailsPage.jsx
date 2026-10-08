@@ -2,11 +2,11 @@ import { ref, update } from 'firebase/database'
 import { db } from '../config/firebase'
 
 const docsList = [
-  ['profilePhoto','الصورة الشخصية'],
-  ['nationalIdFront','البطاقة - أمام'],
-  ['nationalIdBack','البطاقة - خلف'],
-  ['driverLicense','رخصة القيادة'],
-  ['vehicleImage','صورة المركبة'],
+  ['profileBase64','الصورة الشخصية'],
+  ['nationalIdFrontBase64','البطاقة - أمام'],
+  ['nationalIdBackBase64','البطاقة - خلف'],
+  ['driverLicenseBase64','رخصة القيادة'],
+  ['vehiclePhotoBase64','صورة المركبة'],
 ]
 
 export default function CaptainDetailsPage({ captain, documents, onBack }) {
